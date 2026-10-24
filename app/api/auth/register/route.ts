@@ -52,6 +52,7 @@ export async function POST(request: Request) {
   }
 
   const userId = randomUUID();
+  const autoVerify = process.env.MORROW_ALLOW_UNVERIFIED_INVITES === "true";
   const { hash, salt } = hashPassword(password);
   let consumed = false;
 
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
         `INSERT INTO users
           (id, email, password_hash, password_salt, display_name, avatar_emoji,
            role, email_verified, accepted_covenant, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, 'member', 0, 1, ?)`
+         VALUES (?, ?, ?, ?, ?, ?, 'member', ?, 1, ?)`
       ).run(
         userId,
         email,
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
         salt,
         displayName,
         avatarEmoji,
+        autoVerify ? 1 : 0,
         new Date().toISOString()
       );
       const result = db
@@ -92,6 +94,14 @@ export async function POST(request: Request) {
   }
 
   if (!consumed) return errorResponse("注册失败，请重试。");
+
+  if (autoVerify) {
+    return jsonResponse({
+      ok: true,
+      message: "账号已创建，可以登录。",
+      devVerifyUrl: null
+    });
+  }
 
   const verifyToken = randomToken();
   getDb()
