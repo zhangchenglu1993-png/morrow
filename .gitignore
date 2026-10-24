@@ -7,6 +7,7 @@ coverage/
 .script-dist/
 data/
 .env
+.github-token
 .env.*
 !.env.example
 *.log
