@@ -1,0 +1,21 @@
+[Unit]
+Description=Morrow / 点滴美好
+After=network.target
+
+[Service]
+Type=simple
+User=morrow
+Group=morrow
+WorkingDirectory=/opt/morrow/.next/standalone
+EnvironmentFile=/etc/morrow.env
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/morrow
+
+[Install]
+WantedBy=multi-user.target

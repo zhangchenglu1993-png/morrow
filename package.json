@@ -1,0 +1,30 @@
+{
+  "name": "morrow",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "Morrow / 点滴美好 - a quiet place for real, shared joys.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/core.test.js .test-dist/tests/database.test.js",
+    "db:setup": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/setup.js",
+    "db:demo": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/demo.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "next": "^16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^5.9.3"
+  }
+}
