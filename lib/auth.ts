@@ -148,7 +148,9 @@ export function sameOrigin(request: Request): boolean {
   try {
     const originUrl = new URL(origin);
     const requestUrl = new URL(request.url);
-    return originUrl.host === requestUrl.host;
+    const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+    const requestHost = forwardedHost || request.headers.get("host") || requestUrl.host;
+    return originUrl.host === requestHost;
   } catch {
     return false;
   }
