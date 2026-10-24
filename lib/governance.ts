@@ -189,6 +189,25 @@ export function endorseProposal(
   return { ok: true };
 }
 
+export function closeProposalDiscussion(
+  userId: string,
+  proposalId: string
+): { ok: boolean; error?: string } {
+  const level = rankForPoints(getUserPoints(userId)).current.level;
+  if (level < 17) return { ok: false, error: "需要第 17 级及以上的社区权限。" };
+  const proposal = getDb()
+    .prepare("SELECT status FROM proposals WHERE id = ?")
+    .get(proposalId) as { status: ProposalStatus } | undefined;
+  if (!proposal || proposal.status !== "discussion") {
+    return { ok: false, error: "这个提案不在讨论阶段。" };
+  }
+  getDb()
+    .prepare("UPDATE proposals SET discussion_ends_at = ? WHERE id = ?")
+    .run(new Date().toISOString(), proposalId);
+  advanceProposals();
+  return { ok: true };
+}
+
 export function castVote(
   userId: string,
   proposalId: string,

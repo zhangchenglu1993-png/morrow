@@ -29,6 +29,7 @@ export function PostCard({ post, currentUserId, featured, showLink = true }: Pro
   const [submittingFlag, setSubmittingFlag] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressOrigin = useRef<{ x: number; y: number } | null>(null);
   const isAuthor = currentUserId === post.author.id;
   const prompt = promptForDay(post.promptDay ?? 1);
 
@@ -71,12 +72,23 @@ export function PostCard({ post, currentUserId, featured, showLink = true }: Pro
     }
   }
 
-  function startPress() {
+  function startPress(event: React.PointerEvent) {
+    pressOrigin.current = { x: event.clientX, y: event.clientY };
     if (pressTimer.current) clearTimeout(pressTimer.current);
     pressTimer.current = setTimeout(() => setMenuOpen(true), 600);
   }
 
+  function movePress(event: React.PointerEvent) {
+    if (!pressOrigin.current) return;
+    const distance = Math.hypot(
+      event.clientX - pressOrigin.current.x,
+      event.clientY - pressOrigin.current.y
+    );
+    if (distance > 8) clearPress();
+  }
+
   function clearPress() {
+    pressOrigin.current = null;
     if (pressTimer.current) {
       clearTimeout(pressTimer.current);
       pressTimer.current = null;
@@ -154,6 +166,7 @@ export function PostCard({ post, currentUserId, featured, showLink = true }: Pro
         className="post-press-zone"
         onPointerDown={startPress}
         onPointerUp={clearPress}
+        onPointerMove={movePress}
         onPointerCancel={clearPress}
         onPointerLeave={clearPress}
       >

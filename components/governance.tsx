@@ -144,10 +144,12 @@ export function ProposalComposer() {
 export function ProposalCard({
   proposal,
   currentUserId,
+  currentUserLevel,
   eligibleVoters
 }: {
   proposal: ProposalView;
   currentUserId: string | null;
+  currentUserLevel: number;
   eligibleVoters: number;
 }) {
   const router = useRouter();
@@ -192,6 +194,10 @@ export function ProposalCard({
 
   async function endorse() {
     await mutate(`/api/proposals/${proposal.id}/endorse`, { method: "POST" });
+  }
+
+  async function closeDiscussion() {
+    await mutate(`/api/proposals/${proposal.id}/close-discussion`, { method: "POST" });
   }
 
   async function submitComment(event: React.FormEvent) {
@@ -239,6 +245,14 @@ export function ProposalCard({
         <div className="vote-row">
           <button className="button button-ghost button-small" type="button" disabled={busy} onClick={() => void endorse()}>
             联署这条提案
+          </button>
+        </div>
+      ) : null}
+
+      {proposal.status === "discussion" && currentUserId && currentUserLevel >= 17 ? (
+        <div className="vote-row">
+          <button className="button button-ghost button-small" type="button" disabled={busy} onClick={() => void closeDiscussion()}>
+            主持并结束讨论，进入投票
           </button>
         </div>
       ) : null}

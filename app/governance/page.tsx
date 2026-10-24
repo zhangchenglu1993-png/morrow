@@ -1,4 +1,5 @@
 import { getActiveSession } from "@/lib/auth";
+import { getUserRank } from "@/lib/contribution";
 import { getCurrentRuleSnapshot, getProposals } from "@/lib/governance";
 import { ProposalCard, ProposalComposer } from "@/components/governance";
 
@@ -8,6 +9,7 @@ export default async function GovernancePage() {
   const session = await getActiveSession();
   const viewerId = session?.user.id ?? null;
   const proposals = getProposals(viewerId);
+  const currentUserLevel = viewerId ? getUserRank(viewerId).rank.current.level : 0;
   const rules = getCurrentRuleSnapshot();
 
   return (
@@ -49,6 +51,7 @@ export default async function GovernancePage() {
               key={proposal.id}
               proposal={proposal}
               currentUserId={viewerId}
+              currentUserLevel={currentUserLevel}
               eligibleVoters={rules.eligibleVoters}
             />
           ))}

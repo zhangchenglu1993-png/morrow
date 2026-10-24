@@ -10,14 +10,16 @@ type Props = {
   postId: string;
   comments: CommentView[];
   currentUserId: string | null;
+  readOnly?: boolean;
 };
 
-export function CommentSection({ postId, comments, currentUserId }: Props) {
+export function CommentSection({ postId, comments, currentUserId, readOnly = false }: Props) {
   const router = useRouter();
   const [body, setBody] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressOrigin = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     if (!message) return;
@@ -71,16 +73,28 @@ export function CommentSection({ postId, comments, currentUserId }: Props) {
     }
   }
 
-  function startPress(commentId: string) {
+  function startPress(commentId: string, event: React.PointerEvent) {
+    if (readOnly) return;
+    pressOrigin.current = { x: event.clientX, y: event.clientY };
     if (pressTimer.current) clearTimeout(pressTimer.current);
     pressTimer.current = setTimeout(() => void flag(commentId), 700);
   }
 
   function clearPress() {
+    pressOrigin.current = null;
     if (pressTimer.current) {
       clearTimeout(pressTimer.current);
       pressTimer.current = null;
     }
+  }
+
+  function movePress(event: React.PointerEvent) {
+    if (!pressOrigin.current) return;
+    const distance = Math.hypot(
+      event.clientX - pressOrigin.current.x,
+      event.clientY - pressOrigin.current.y
+    );
+    if (distance > 8) clearPress();
   }
 
   return (
@@ -93,8 +107,9 @@ export function CommentSection({ postId, comments, currentUserId }: Props) {
               className="comment-item"
               key={comment.id}
               tabIndex={0}
-              onPointerDown={() => startPress(comment.id)}
+              onPointerDown={(event) => startPress(comment.id, event)}
               onPointerUp={clearPress}
+              onPointerMove={movePress}
               onPointerLeave={clearPress}
               onPointerCancel={clearPress}
               onContextMenu={(event) => {
@@ -129,7 +144,9 @@ export function CommentSection({ postId, comments, currentUserId }: Props) {
         <p className="field-hint">还没有评论。留下第一句真诚的回应。</p>
       )}
 
-      {currentUserId ? (
+      {readOnly ? (
+        <p className="field-hint">这条内容已由社区反馈隐藏，互动已经冻结。</p>
+      ) : currentUserId ? (
         <form className="comment-form" onSubmit={(event) => void submit(event)}>
           <textarea
             value={body}
@@ -147,7 +164,7 @@ export function CommentSection({ postId, comments, currentUserId }: Props) {
           登录后可以回应。评论支持文字和表情，不支持外部链接。
         </p>
       )}
-      <p className="field-hint">长按评论，可把它交给社区共同判断。</p>
+      {readOnly ? null : <p className="field-hint">长按评论，可把它交给社区共同判断。</p>}
       {message ? <div className="toast" role="status">{message}</div> : null}
     </section>
   );

@@ -21,7 +21,12 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
         ← 回到广场
       </Link>
       <PostCard post={post} currentUserId={viewerId} showLink={false} />
-      <CommentSection postId={id} comments={comments} currentUserId={viewerId} />
+      <CommentSection
+        postId={id}
+        comments={comments}
+        currentUserId={viewerId}
+        readOnly={post.status === "hidden"}
+      />
     </div>
   );
 }
