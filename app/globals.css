@@ -1869,3 +1869,160 @@ main {
     transition-duration: 0.01ms !important;
   }
 }
+
+.together-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+}
+
+.together-card h3 {
+  margin: 4px 0 6px;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+}
+
+.together-time {
+  margin: 0;
+  color: var(--leaf-deep);
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+}
+
+.gather-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.gather-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+}
+
+.gather-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.gather-head h3 {
+  margin: 0 0 4px;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.gather-meta {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 0.76rem;
+}
+
+.gather-author {
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.gather-note {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.gather-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  color: var(--ink-faint);
+  font-size: 0.78rem;
+}
+
+.gather-person {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.gather-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.gather-memory {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface);
+  border-left: 3px solid var(--sun);
+  font-size: 0.86rem;
+}
+
+.gather-memory p {
+  margin: 0;
+}
+
+.gather-memory a {
+  font-size: 0.76rem;
+}
+
+.gather-memory-form {
+  display: grid;
+  gap: 8px;
+}
+
+.gather-memory-form label {
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.gather-row {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: 12px;
+}
+
+.stamp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.stamp {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--paper-deep);
+  border: 1px dashed var(--line);
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+}
+
+@media (max-width: 640px) {
+  .gather-row {
+    grid-template-columns: 1fr;
+  }
+
+  .together-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -39,6 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </Link>
             <nav className="nav-links" aria-label="主要导航">
               <Link href="/">广场</Link>
+              {user ? <Link href="/together">一起</Link> : null}
               <Link href="/leaderboard">爵位榜</Link>
               <Link href="/governance">共同治理</Link>
               {user ? <Link href="/private">私密区</Link> : null}

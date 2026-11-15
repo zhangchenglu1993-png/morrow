@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { PostCard } from "@/components/post-card";
 import { getActiveSession } from "@/lib/auth";
+import { getNextGathering } from "@/lib/gatherings";
 import {
   getAdminStats,
   getCurrentPrompt,
   getFeaturedToday,
   getFeed
 } from "@/lib/queries";
+import { formatDateTime } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +22,7 @@ export default async function HomePage() {
     getAdminStats()
   ];
   const rest = feed.filter((post) => post.id !== featured?.id);
+  const nextGathering = viewerId ? getNextGathering(viewerId) : null;
 
   return (
     <div className="page">
@@ -107,6 +110,53 @@ export default async function HomePage() {
             {viewerId ? "回应今天" : "加入后回应"}
           </Link>
         </div>
+      </section>
+
+      <section className="section" aria-labelledby="together-title">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Better together</p>
+            <h2 id="together-title">一起做件小事</h2>
+            <p>线上的相伴，也可以变成一次真实的相见。</p>
+          </div>
+          {viewerId ? (
+            <Link href="/together">{nextGathering ? "看看全部 →" : "发起一件小事 →"}</Link>
+          ) : null}
+        </div>
+        {nextGathering ? (
+          <div className="together-card">
+            <div>
+              <p className="together-time">
+                {formatDateTime(nextGathering.startsAt)}
+                {nextGathering.place ? ` · ${nextGathering.place}` : ""}
+              </p>
+              <h3>{nextGathering.title}</h3>
+              <p className="field-hint">
+                已经有 {nextGathering.attendees.length} 人会去：
+                {nextGathering.attendees.map((person) => person.displayName).join("、")}
+              </p>
+            </div>
+            <Link className="button button-sun button-small" href="/together">
+              {nextGathering.isAttending ? "已报名，去看看" : "我也去"}
+            </Link>
+          </div>
+        ) : viewerId ? (
+          <div className="empty-state">
+            <h3>这周还没有约定。</h3>
+            <p>发起散步、看展或一顿饭，给熟悉的人一个见面的理由。</p>
+            <Link className="button button-sun" href="/together">
+              发起第一件小事
+            </Link>
+          </div>
+        ) : (
+          <div className="empty-state">
+            <h3>成员们正在把线上的相伴，变成真实的相见。</h3>
+            <p>加入之后，你也可以发起或参加一件小事。</p>
+            <Link className="button button-sun" href="/register">
+              接受邀请
+            </Link>
+          </div>
+        )}
       </section>
 
       <section className="section" aria-labelledby="feed-title">
