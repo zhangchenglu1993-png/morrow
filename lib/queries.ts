@@ -199,6 +199,37 @@ export function getFeed(viewerId?: string | null, limit = DEFAULT_RULES.feedPage
   return rows.map((row) => buildPost(row, viewerId));
 }
 
+export function getPostsByAuthors(
+  authorIds: string[],
+  viewerId?: string | null,
+  limit = 10
+): PostView[] {
+  if (authorIds.length === 0) return [];
+  const placeholders = authorIds.map(() => "?").join(", ");
+  const rows = getDb()
+    .prepare(
+      `SELECT p.id, p.body, p.prompt_day, p.status, p.created_at, p.author_id,
+              u.display_name, u.avatar_emoji, u.role
+       FROM posts p
+       JOIN users u ON u.id = p.author_id
+       WHERE p.status = 'public' AND p.author_id IN (${placeholders})
+       ORDER BY p.created_at DESC
+       LIMIT ?`
+    )
+    .all(...authorIds, limit) as Array<{
+    id: string;
+    body: string;
+    prompt_day: number | null;
+    status: "public" | "hidden";
+    created_at: string;
+    author_id: string;
+    display_name: string;
+    avatar_emoji: string;
+    role: "owner" | "member";
+  }>;
+  return rows.map((row) => buildPost(row, viewerId));
+}
+
 export function getPost(
   postId: string,
   viewerId?: string | null

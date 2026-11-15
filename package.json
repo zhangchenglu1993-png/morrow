@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/core.test.js .test-dist/tests/database.test.js .test-dist/tests/invites.test.js .test-dist/tests/gatherings.test.js",
+    "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/core.test.js .test-dist/tests/database.test.js .test-dist/tests/invites.test.js .test-dist/tests/gatherings.test.js .test-dist/tests/relationships.test.js",
     "db:setup": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/setup.js",
     "db:demo": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/demo.js"
   },

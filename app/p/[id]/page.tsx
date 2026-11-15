@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CommentSection } from "@/components/comment-section";
+import { MarkSeen } from "@/components/mark-seen";
 import { PostCard } from "@/components/post-card";
 import { getActiveSession } from "@/lib/auth";
 import { getComments, getPost } from "@/lib/queries";
@@ -17,6 +18,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="detail-page">
+      {viewerId ? <MarkSeen endpoint={`/api/posts/${id}/seen`} /> : null}
       <Link className="back-link" href="/">
         ← 回到广场
       </Link>

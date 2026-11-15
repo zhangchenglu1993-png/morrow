@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { getCurrentUser } from "@/lib/auth";
+import { getInboxUnreadCount } from "@/lib/relationships";
 import { LogoutButton } from "@/components/logout-button";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
+  const inboxUnread = user ? getInboxUnreadCount(user.id) : 0;
   return (
     <html lang="zh-CN">
       <body>
@@ -44,6 +46,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Link href="/governance">共同治理</Link>
               {user ? <Link href="/private">私密区</Link> : null}
               {user ? <Link href="/invites">邀请</Link> : null}
+              {user ? <Link href="/people">同行者</Link> : null}
+              {user ? (
+                <Link href="/inbox">
+                  回应
+                  {inboxUnread > 0 ? <span className="nav-badge">{inboxUnread}</span> : null}
+                </Link>
+              ) : null}
             </nav>
             <div className="header-actions">
               {user ? (

@@ -224,6 +224,19 @@ function createDb(): DatabaseSync {
       created_at TEXT NOT NULL,
       PRIMARY KEY (gathering_id, user_id)
     );
+
+    CREATE TABLE IF NOT EXISTS user_seen (
+      user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      inbox_seen_at TEXT,
+      people_seen_at TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS post_visits (
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      post_id TEXT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+      seen_at TEXT NOT NULL,
+      PRIMARY KEY (user_id, post_id)
+    );
   `);
 
   const promptInsert = db.prepare(
