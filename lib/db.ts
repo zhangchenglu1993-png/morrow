@@ -49,6 +49,8 @@ function createDb(): DatabaseSync {
       used_at TEXT,
       created_at TEXT NOT NULL
     );
+    CREATE INDEX IF NOT EXISTS invitations_creator_idx
+      ON invitations(created_by, created_at DESC);
 
     CREATE TABLE IF NOT EXISTS sessions (
       id TEXT PRIMARY KEY,

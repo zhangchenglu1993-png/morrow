@@ -42,7 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Link href="/leaderboard">爵位榜</Link>
               <Link href="/governance">共同治理</Link>
               {user ? <Link href="/private">私密区</Link> : null}
-              {user?.role === "owner" ? <Link href="/admin/invites">邀请</Link> : null}
+              {user ? <Link href="/invites">邀请</Link> : null}
             </nav>
             <div className="header-actions">
               {user ? (
