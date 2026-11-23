@@ -484,10 +484,11 @@ main {
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-xl);
-  background: var(--surface);
+  background: var(--surface-solid);
   border: 1px solid rgba(48, 68, 52, 0.11);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
 }
 
 .post-card.featured {
@@ -1680,6 +1681,11 @@ main {
     gap: 18px;
     padding-bottom: 3px;
     scrollbar-width: none;
+  }
+
+  .site-header {
+    backdrop-filter: none;
+    background: var(--paper);
   }
 
   .nav-links::-webkit-scrollbar {

@@ -212,6 +212,7 @@ export function PostCard({ post, currentUserId, featured, showLink = true }: Pro
                 src={`/api/media/${media.id}`}
                 alt={`${post.author.displayName} 分享的照片`}
                 loading="lazy"
+                decoding="async"
               />
             ) : (
               <video
