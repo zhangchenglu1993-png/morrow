@@ -2174,3 +2174,77 @@ main {
   color: #fff;
   font-size: 0.64rem;
 }
+
+.install-banner {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.install-icon {
+  font-size: 1.5rem;
+}
+
+.install-body {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.install-body strong {
+  font-size: 0.9rem;
+}
+
+.install-body span {
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.install-steps {
+  color: var(--ink-faint) !important;
+}
+
+.install-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.install-close {
+  padding: 4px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .install-banner {
+    left: 8px;
+    right: 8px;
+  }
+}
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .site-footer {
+    padding-bottom: calc(36px + env(safe-area-inset-bottom));
+  }
+
+  .site-header {
+    padding-top: env(safe-area-inset-top);
+  }
+}
