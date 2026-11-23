@@ -1,6 +1,6 @@
 {
   "name": "morrow",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "license": "AGPL-3.0-only",
   "description": "Morrow / 点滴美好 - a quiet place for real, shared joys.",
@@ -9,10 +9,11 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/core.test.js .test-dist/tests/database.test.js .test-dist/tests/invites.test.js .test-dist/tests/gatherings.test.js .test-dist/tests/relationships.test.js",
+    "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/core.test.js .test-dist/tests/database.test.js .test-dist/tests/invites.test.js .test-dist/tests/gatherings.test.js .test-dist/tests/relationships.test.js .test-dist/tests/calendar.test.js",
     "db:setup": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/setup.js",
     "db:demo": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/demo.js",
-    "mail:test": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/mail-test.js"
+    "mail:test": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/mail-test.js",
+    "remind": "tsc -p tsconfig.scripts.json && node .script-dist/scripts/remind.js"
   },
   "engines": {
     "node": ">=24"

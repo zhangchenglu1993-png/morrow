@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { PostCard } from "@/components/post-card";
 import { getActiveSession } from "@/lib/auth";
-import { getNextGathering } from "@/lib/gatherings";
+import { getNextGathering, getNextJoinedGathering } from "@/lib/gatherings";
+import { relativeDayLabel } from "@/lib/calendar";
 import {
   getAdminStats,
   getCurrentPrompt,
@@ -23,9 +24,27 @@ export default async function HomePage() {
   ];
   const rest = feed.filter((post) => post.id !== featured?.id);
   const nextGathering = viewerId ? getNextGathering(viewerId) : null;
+  const reminder = viewerId ? getNextJoinedGathering(viewerId) : null;
+  const reminderSoon = Boolean(
+    reminder && new Date(reminder.startsAt).getTime() - Date.now() <= 36 * 3_600_000
+  );
 
   return (
     <div className="page">
+      {reminderSoon && reminder ? (
+        <div className="reminder-strip">
+          <span aria-hidden="true">🔔</span>
+          <span>
+            <strong>
+              {relativeDayLabel(reminder.startsAt)}{" "}
+              {formatDateTime(reminder.startsAt).split(" ").slice(-1)[0]}
+            </strong>
+            {" · "}{reminder.title}
+            {reminder.place ? ` · ${reminder.place}` : ""}
+          </span>
+          <Link href="/calendar">查看日历 →</Link>
+        </div>
+      ) : null}
       <section className="hero">
         <div>
           <p className="hero-kicker">Morrow · 点滴美好</p>

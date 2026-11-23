@@ -237,6 +237,14 @@ function createDb(): DatabaseSync {
       seen_at TEXT NOT NULL,
       PRIMARY KEY (user_id, post_id)
     );
+
+    CREATE TABLE IF NOT EXISTS gathering_reminders (
+      gathering_id TEXT NOT NULL REFERENCES gatherings(id) ON DELETE CASCADE,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      kind TEXT NOT NULL CHECK (kind IN ('day', 'hour')),
+      sent_at TEXT NOT NULL,
+      PRIMARY KEY (gathering_id, user_id, kind)
+    );
   `);
 
   const promptInsert = db.prepare(

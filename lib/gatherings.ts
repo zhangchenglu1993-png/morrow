@@ -424,3 +424,63 @@ export function getGatheringPassport(userId: string): {
     }))
   };
 }
+
+export function listGatheringsBetween(
+  startIso: string,
+  endIso: string,
+  viewerId: string | null
+): GatheringView[] {
+  const rows = getDb()
+    .prepare(
+      `${GATHERING_SELECT} AND g.starts_at >= ? AND g.starts_at < ? ORDER BY g.starts_at ASC`
+    )
+    .all(startIso, endIso) as GatheringRow[];
+  return viewsFor(rows, viewerId);
+}
+
+export function listMyUpcomingGatherings(viewerId: string): GatheringView[] {
+  const rows = getDb()
+    .prepare(
+      `${GATHERING_SELECT}
+       AND g.starts_at >= ?
+       AND EXISTS (
+         SELECT 1 FROM gathering_attendees a
+         WHERE a.gathering_id = g.id AND a.user_id = ?
+       )
+       ORDER BY g.starts_at ASC LIMIT 30`
+    )
+    .all(new Date().toISOString(), viewerId) as GatheringRow[];
+  return viewsFor(rows, viewerId);
+}
+
+export function listMyPendingMemories(viewerId: string): GatheringView[] {
+  const rows = getDb()
+    .prepare(
+      `${GATHERING_SELECT}
+       AND g.starts_at < ?
+       AND g.memory_post_id IS NULL
+       AND EXISTS (
+         SELECT 1 FROM gathering_attendees a
+         WHERE a.gathering_id = g.id AND a.user_id = ?
+       )
+       ORDER BY g.starts_at DESC LIMIT 12`
+    )
+    .all(new Date().toISOString(), viewerId) as GatheringRow[];
+  return viewsFor(rows, viewerId);
+}
+
+export function getNextJoinedGathering(viewerId: string): GatheringView | null {
+  const row = getDb()
+    .prepare(
+      `${GATHERING_SELECT}
+       AND g.starts_at >= ?
+       AND EXISTS (
+         SELECT 1 FROM gathering_attendees a
+         WHERE a.gathering_id = g.id AND a.user_id = ?
+       )
+       ORDER BY g.starts_at ASC LIMIT 1`
+    )
+    .get(new Date().toISOString(), viewerId) as GatheringRow | undefined;
+  if (!row) return null;
+  return viewsFor([row], viewerId)[0];
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Morrow gathering reminders
+After=network.target
+
+[Service]
+Type=oneshot
+User=morrow
+Group=morrow
+WorkingDirectory=/opt/morrow
+EnvironmentFile=/etc/morrow.env
+ExecStart=/usr/bin/node /opt/morrow/.script-dist/scripts/remind.js
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/morrow

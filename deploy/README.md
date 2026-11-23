@@ -111,3 +111,18 @@ sudo systemctl restart morrow
 ```
 
 Fork 的 Pull Request 不会自动部署。生产发布必须由维护者从受保护主分支手动触发。
+
+## 8. 日历提醒
+
+部署后编译提醒脚本，并安装每 15 分钟运行一次的 systemd 定时器：
+
+```bash
+cd /opt/morrow
+sudo -u morrow npm run remind -- --dry-run
+sudo cp deploy/morrow-remind.service deploy/morrow-remind.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now morrow-remind.timer
+systemctl list-timers | grep morrow
+```
+
+提醒脚本查找 20–26 小时后与 45 分钟–2 小时后的约定，只给报名成员发送邮件，并通过 `gathering_reminders` 去重，同一场约定的同类提醒只发一次。
