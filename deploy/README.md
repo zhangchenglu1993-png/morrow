@@ -32,7 +32,11 @@ MORROW_APP_URL=https://your-domain.example
 MORROW_ICP_NUMBER=your-icp-number
 MORROW_DB_PATH=/var/lib/morrow/data/morrow.db
 MORROW_UPLOAD_DIR=/var/lib/morrow/uploads
-RESEND_API_KEY=your-key
+SMTP_HOST=smtpdm.aliyun.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=hello@your-domain.example
+SMTP_PASS=your-smtp-password
 MORROW_FROM_EMAIL=Morrow <hello@your-domain.example>
 NODE_ENV=production
 ```

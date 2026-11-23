@@ -1,12 +1,51 @@
+import nodemailer, { type Transporter } from "nodemailer";
+
 type SendEmailInput = {
   to: string;
   subject: string;
   html: string;
 };
 
+let smtpTransporter: Transporter | null = null;
+
+function smtpTransport(): Transporter | null {
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS;
+  if (!user || !pass) return null;
+  if (!smtpTransporter) {
+    smtpTransporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST?.trim() || "smtpdm.aliyun.com",
+      port: Number(process.env.SMTP_PORT || 465),
+      secure: process.env.SMTP_SECURE !== "false",
+      auth: { user, pass }
+    });
+  }
+  return smtpTransporter;
+}
+
 export async function sendEmail(input: SendEmailInput): Promise<boolean> {
+  const from =
+    process.env.MORROW_FROM_EMAIL?.trim() || process.env.SMTP_USER?.trim() || "";
+  const smtp = smtpTransport();
+
+  if (smtp) {
+    try {
+      await smtp.sendMail({
+        from,
+        to: input.to,
+        subject: input.subject,
+        html: input.html
+      });
+      return true;
+    } catch (error) {
+      console.error(
+        "[morrow:mail] SMTP 发信失败：",
+        error instanceof Error ? error.message : error
+      );
+    }
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.MORROW_FROM_EMAIL;
   if (!apiKey || !from) {
     console.info(`[morrow:mail] ${input.subject} -> ${input.to}`);
     return false;
