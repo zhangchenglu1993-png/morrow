@@ -234,6 +234,17 @@ main {
   letter-spacing: 0.04em;
 }
 
+.icp-link {
+  color: var(--ink-faint);
+  font-size: 0.74rem;
+  text-decoration: none;
+}
+
+.icp-link:hover {
+  color: var(--ink-soft);
+  text-decoration: underline;
+}
+
 .button {
   appearance: none;
   border: 1px solid transparent;

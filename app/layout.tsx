@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   const inboxUnread = user ? getInboxUnreadCount(user.id) : 0;
+  const icpNumber = process.env.MORROW_ICP_NUMBER?.trim() ?? "";
   return (
     <html lang="zh-CN">
       <body>
@@ -81,6 +82,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <span>Morrow · 点滴美好</span>
           <span>Small joys, kept for tomorrow.</span>
           <span>真实记录，共同守护。</span>
+          {icpNumber ? (
+            <a
+              className="icp-link"
+              href="https://beian.miit.gov.cn/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {icpNumber}
+            </a>
+          ) : null}
         </footer>
       </body>
     </html>
